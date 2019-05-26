@@ -12,19 +12,23 @@ This method assumes the graph is represented as an adjacency
 list.
 */
 function depthFirstSearch(graph, start) {
-	//Have an array to keep track of where to go next
-	let stack = [];
+	/* 
+	Have an array to keep track of where to go next
+	To use an array as a stack, call push when adding elements
+	to the array and call pop when removing elements.
+	*/
+	const stack = [];
 
 	//A set to keep track of where you've already been
-	let visited = new Set();
+	const visited = new Set();
 
 	stack.push(start);
 	visited.add(start);
 
 	while (!stack.length == 0) {
 		let currentNode = stack.pop();
+		
 		let neighbors = graph[currentNode] || [];
-
 		for (let neighbor of neighbors) {
 			if (!visited.has(neighbor)) {
 				stack.push(neighbor);
@@ -34,6 +38,67 @@ function depthFirstSearch(graph, start) {
 	}
 }
 
+/* 
+Given a graph, a start position, and an end position
+return true if there is a path from start to end
+and false otherwise.
+
+*/
 function hasPath(graph, start, end) {
-	
+	const stack = [];
+	const visited = new Set();
+
+	stack.push(start);
+	visited.add(start);
+
+	while (!stack.length == 0) {
+		let currentNode = stack.pop();
+		
+		if (currentNode == end) {
+			return true;
+		}
+		let neighbors = graph[currentNode] || [];
+		for (let neighbor of neighbors) {
+			stack.push(neighbor);
+			visited.add(neighbor);
+		}
+	}
+	return false;
+}
+
+
+function findPath(graph, start, end) {
+	const stack = [];
+	const visited = new Set();
+
+	const cameFrom = {};
+	cameFrom[start] = null;
+
+	stack.push(start);
+	visited.add(start);
+
+	while (!stack.length == 0) {
+		let currentNode = stack.pop();
+
+		if (currentNode == end) {
+			//Backtrack through the map to build the path
+			const path = [end];
+			let node = cameFrom[end];
+
+			while (node != null) {
+				path.unshift(node);
+				node = cameFrom[node];
+			}
+
+			return path;
+		}
+
+		let neighbors = graph[currentNode] || [];
+		for (let neighbor of neighbors) {
+			stack.push(neighbor);
+			visited.add(neighbor);
+			cameFrom[neighbor] = currentNode;
+		}
+
+	}
 }
