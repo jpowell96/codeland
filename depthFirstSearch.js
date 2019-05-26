@@ -59,8 +59,10 @@ function hasPath(graph, start, end) {
 		}
 		let neighbors = graph[currentNode] || [];
 		for (let neighbor of neighbors) {
-			stack.push(neighbor);
-			visited.add(neighbor);
+			if (!visited.has(neighbor)) {
+				stack.push(neighbor);
+				visited.add(neighbor);
+			}
 		}
 	}
 	return false;
@@ -89,16 +91,27 @@ function findPath(graph, start, end) {
 				path.unshift(node);
 				node = cameFrom[node];
 			}
-
 			return path;
 		}
 
 		let neighbors = graph[currentNode] || [];
 		for (let neighbor of neighbors) {
-			stack.push(neighbor);
-			visited.add(neighbor);
-			cameFrom[neighbor] = currentNode;
+			if (!visited.has(neighbor)) {
+				stack.push(neighbor);
+				visited.add(neighbor);
+				cameFrom[neighbor] = currentNode;				
+			}
 		}
-
 	}
+	return [];
 }
+
+
+const graph = {
+	"A" : ["B"],
+	"B" : ["C", "A"],
+	"C" : ["B", "A"]
+}
+
+console.log(hasPath(graph, "A", "C"));
+console.log(findPath(graph, "A", "C"));
